@@ -20,6 +20,18 @@ export const apiKeyService = {
     return data || []
   },
 
+  async validateApiKey(key: string) {
+    const { data, error } = await supabase
+      .from('api_keys')
+      .select('*')
+      .eq('key', key)
+      .eq('status', 'active')
+      .single()
+
+    if (error) return false
+    return !!data
+  },
+
   async createApiKey(newKey: { name: string; key: string; status: string; monthly_limit: number | null }) {
     const { data, error } = await supabase
       .from('api_keys')

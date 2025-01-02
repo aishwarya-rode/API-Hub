@@ -91,7 +91,7 @@ export default function Sidebar() {
             </Link>
 
             <Link 
-              href="/api-playground" 
+              href="/playground" 
               className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-[#232936] rounded-lg"
             >
               <CommandLineIcon className="h-5 w-5" />
