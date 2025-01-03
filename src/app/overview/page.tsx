@@ -9,7 +9,7 @@ import { ApiKeysTable } from '@/components/dashboard/ApiKeysTable'
 import { CreateKeyModal } from '@/components/dashboard/CreateKeyModal'
 import { signOut, useSession } from 'next-auth/react'
 
-export default function Dashboard() {
+export default function Overview() {
   const { data: session } = useSession()
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([])
   const [isCreating, setIsCreating] = useState(false)
@@ -143,4 +143,4 @@ export default function Dashboard() {
       </div>
     </div>
   )
-}
+} 

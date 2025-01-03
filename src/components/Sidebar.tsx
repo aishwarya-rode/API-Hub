@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import { 
   HomeIcon, 
   BeakerIcon, 
@@ -17,6 +19,20 @@ import {
 export default function Sidebar() {
   const [selectedWorkspace, setSelectedWorkspace] = useState('Personal')
   const [isOpen, setIsOpen] = useState(true)
+  const pathname = usePathname()
+  const { data: session } = useSession()
+
+  const isActivePath = (path: string) => {
+    return pathname === path
+  }
+
+  const getLinkClassName = (path: string) => {
+    const baseClasses = "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors duration-200"
+    const activeClasses = "bg-[#232936] text-white"
+    const inactiveClasses = "text-gray-300 hover:text-white hover:bg-[#232936]"
+    
+    return `${baseClasses} ${isActivePath(path) ? activeClasses : inactiveClasses}`
+  }
 
   return (
     <div className="relative">
@@ -68,7 +84,7 @@ export default function Sidebar() {
           <div className="space-y-1 px-3">
             <Link 
               href="/overview" 
-              className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-[#232936] rounded-lg group"
+              className={getLinkClassName('/overview')}
             >
               <HomeIcon className="h-5 w-5" />
               <span>Overview</span>
@@ -76,7 +92,7 @@ export default function Sidebar() {
 
             <Link 
               href="/research-assistant" 
-              className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-[#232936] rounded-lg"
+              className={getLinkClassName('/research-assistant')}
             >
               <BeakerIcon className="h-5 w-5" />
               <span>Research Assistant</span>
@@ -84,7 +100,7 @@ export default function Sidebar() {
 
             <Link 
               href="/research-reports" 
-              className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-[#232936] rounded-lg"
+              className={getLinkClassName('/research-reports')}
             >
               <DocumentTextIcon className="h-5 w-5" />
               <span>Research Reports</span>
@@ -92,7 +108,7 @@ export default function Sidebar() {
 
             <Link 
               href="/playground" 
-              className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-[#232936] rounded-lg"
+              className={getLinkClassName('/playground')}
             >
               <CommandLineIcon className="h-5 w-5" />
               <span>API Playground</span>
@@ -100,7 +116,7 @@ export default function Sidebar() {
 
             <Link 
               href="/invoices" 
-              className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-[#232936] rounded-lg"
+              className={getLinkClassName('/invoices')}
             >
               <DocumentIcon className="h-5 w-5" />
               <span>Invoices</span>
@@ -108,7 +124,7 @@ export default function Sidebar() {
 
             <Link 
               href="/documentation" 
-              className="flex items-center gap-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-[#232936] rounded-lg"
+              className={getLinkClassName('/documentation')}
             >
               <DocumentTextIcon className="h-5 w-5" />
               <span>Documentation</span>
@@ -122,11 +138,21 @@ export default function Sidebar() {
         {/* User Profile */}
         <div className="p-4 border-t border-gray-800">
           <button className="w-full flex items-center gap-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-[#232936] rounded-lg">
-            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white">
-              A
-            </div>
+            {session?.user?.image ? (
+              <Image
+                src={session.user.image}
+                alt={session.user.name || 'User'}
+                width={32}
+                height={32}
+                className="rounded-full"
+              />
+            ) : (
+              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white">
+                {session?.user?.name?.[0] || '?'}
+              </div>
+            )}
             <div className="flex-1 text-left">
-              <div className="text-sm font-medium">Aishwarya Rode</div>
+              <div className="text-sm font-medium">{session?.user?.name || 'Guest'}</div>
             </div>
             <Cog8ToothIcon className="h-5 w-5" />
           </button>
